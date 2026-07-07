@@ -18,8 +18,8 @@
     <div class="card">
         <div class="card-title">방송 선택</div>
         <div class="sel-row">
-            <select id="status" onchange="loadTemplate()" style="flex:1.5;"></select>
-            <select id="language" onchange="loadTemplate()" style="flex:1.2;"></select>
+            <select id="status" style="flex:1.5;"></select>
+            <select id="language" style="flex:1.2;"></select>
         </div>
         <div class="mgmt" id="master-management-panel">
             <div class="mgmt-b">
@@ -45,7 +45,7 @@
         </div>
         <textarea id="templateInput" rows="10" readonly disabled oninput="renderDynamicInputs()"></textarea>
         <div id="free-broadcast-section" style="display:none;">
-            <textarea id="freeBroadcastInput" rows="10" placeholder="자유 방송문을 한국어로 입력하세요." oninput="onFreeBroadcastInput()"></textarea>
+            <textarea id="freeBroadcastInput" rows="10" placeholder="자유 방송문을 한국어로 입력하세요."></textarea>
             <div class="helper-text">입력은 한국어로 하고, 선택한 언어 1개만 미리보기와 TTS에 반영됩니다.</div>
         </div>
         <div class="save-grp" id="save-control-group">

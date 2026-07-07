@@ -17,8 +17,38 @@ const FREE_LANG_OPTIONS = [
 ];
 
 window.onload = function () {
+    bindAnnouncementEvents();
     loadTemplate();
 };
+
+function bindAnnouncementEvents() {
+    const statusSelect = document.getElementById("status");
+    const languageSelect = document.getElementById("language");
+    const freeBroadcastInput = document.getElementById("freeBroadcastInput");
+
+    if (statusSelect && !statusSelect.dataset.boundChange) {
+        statusSelect.addEventListener("change", onBroadcastSelectionChange);
+        statusSelect.dataset.boundChange = "true";
+    }
+
+    if (languageSelect && !languageSelect.dataset.boundChange) {
+        languageSelect.addEventListener("change", onBroadcastSelectionChange);
+        languageSelect.dataset.boundChange = "true";
+    }
+
+    if (freeBroadcastInput && !freeBroadcastInput.dataset.boundInput) {
+        freeBroadcastInput.addEventListener("input", onFreeBroadcastInput);
+        freeBroadcastInput.dataset.boundInput = "true";
+    }
+}
+
+function onBroadcastSelectionChange() {
+    loadTemplate();
+
+    if (isFreeBroadcastMode()) {
+        updateFreeBroadcastPreview();
+    }
+}
 
 function toggleTuning() {
     const panel = document.getElementById("tuningPanel");
@@ -340,6 +370,7 @@ async function autoTranslateVar(key) {
         ]);
         varValues[key] = { ko: koValue, en, ja, zh };
     } catch (error) {
+        console.error("Variable translation failed:", error);
         varValues[key] = { ko: koValue, en: koValue, ja: koValue, zh: koValue };
     }
     document.getElementById("translatingBadge").style.display = "none";
@@ -348,7 +379,9 @@ async function autoTranslateVar(key) {
 
 function onFreeBroadcastInput() {
     if (freeBroadcastTimer) clearTimeout(freeBroadcastTimer);
-    freeBroadcastTimer = setTimeout(() => updateFreeBroadcastPreview(), 250);
+    freeBroadcastTimer = setTimeout(() => {
+        updateFreeBroadcastPreview();
+    }, 250);
     if (!getSelectedFreeLanguage().translateTarget) {
         freeBroadcastPreviewText = document.getElementById("freeBroadcastInput").value;
         document.getElementById("scriptPreview").innerText = freeBroadcastPreviewText;
@@ -391,6 +424,7 @@ async function updateFreeBroadcastPreview() {
         preview.innerText = translated;
     } catch (error) {
         if (requestId !== freeBroadcastRequestId) return;
+        console.error("Free broadcast translation failed:", error);
         freeBroadcastPreviewText = input;
         preview.innerText = input;
     } finally {
@@ -407,7 +441,18 @@ async function gTranslate(text, target) {
         body: JSON.stringify({ q: text, source: "ko", target, format: "text" })
     });
     const data = await response.json();
-    return data?.data?.translations?.[0]?.translatedText || text;
+
+    if (!response.ok || data?.error) {
+        const message = data?.error?.message || response.statusText || "Translate request failed";
+        throw new Error(message);
+    }
+
+    const translatedText = data?.data?.translations?.[0]?.translatedText;
+    if (!translatedText) {
+        throw new Error(`No translation returned for target ${target}`);
+    }
+
+    return translatedText;
 }
 
 function expandFlight(flight, lang) {
