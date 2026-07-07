@@ -38,12 +38,16 @@
     <!-- 방송문 -->
     <div class="card">
         <div class="card-title">방송문</div>
-        <div class="frow">
+        <div class="frow" id="template-admin-row">
             <input type="password" id="passwordInput" placeholder="관리자 비밀번호" style="flex:1;">
             <button class="btn-gold" onclick="unlockTemplate()">해제</button>
             <button class="btn-slate" onclick="lockTemplate()">잠금</button>
         </div>
         <textarea id="templateInput" rows="10" readonly disabled oninput="renderDynamicInputs()"></textarea>
+        <div id="free-broadcast-section" style="display:none;">
+            <textarea id="freeBroadcastInput" rows="10" placeholder="자유 방송문을 한국어로 입력하세요." oninput="onFreeBroadcastInput()"></textarea>
+            <div class="helper-text">입력은 한국어로 하고, 선택한 언어 1개만 미리보기와 TTS에 반영됩니다.</div>
+        </div>
         <div class="save-grp" id="save-control-group">
             <button class="btn-green" style="flex:1;" onclick="saveTemplate()">💾 저장</button>
             <button class="btn-slate" onclick="resetDefaultTemplate()">초기화</button>

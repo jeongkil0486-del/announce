@@ -40,6 +40,7 @@
         .sv{width:34px;text-align:right;font-weight:700;color:var(--navy);font-size:12px;}
         .save-grp{display:none;gap:8px;margin-top:10px;}
         .save-grp.show{display:flex;}
+        .helper-text{margin-top:8px;font-size:12px;line-height:1.5;color:var(--g4);}
         .dyn-grp{display:flex;align-items:center;gap:10px;background:var(--g1);border:1.5px solid var(--g2);padding:10px 14px;border-radius:8px;margin-bottom:8px;}
         .dyn-grp:last-child{margin-bottom:0;}
         .dyn-grp label{font-size:12px;font-weight:600;color:var(--g4);width:80px;flex-shrink:0;}
